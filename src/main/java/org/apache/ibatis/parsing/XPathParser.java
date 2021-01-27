@@ -46,10 +46,29 @@ import org.xml.sax.SAXParseException;
  */
 public class XPathParser {
 
+  /**
+   * document对象
+   */
   private final Document document;
+
+  /**
+   * 是否开启校验
+   */
   private boolean validation;
+
+  /**
+   * 用于加载本地DTD文件
+   */
   private EntityResolver entityResolver;
+
+  /**
+   * mybatis-config.xml <properties> 标签定义的键值对集合
+   */
   private Properties variables;
+
+  /**
+   * Xpath对象
+   */
   private XPath xpath;
 
   public XPathParser(String xml) {
@@ -227,10 +246,18 @@ public class XPathParser {
     }
   }
 
+  /**
+   * 调用createDocument发放之前一定要先调用 commonConstructor() 方法完成初始化
+   * 封装了创建Document对象的过程并触发了加载XML文档的过程
+   * @param inputSource
+   * @return
+   */
   private Document createDocument(InputSource inputSource) {
     // important: this must only be called AFTER common constructor
     try {
+      // 创建 DocumentBuilderFactory 对象
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      //对 DocumentBuilderFactory 对象一系列配置
       factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
       factory.setValidating(validation);
 
@@ -240,7 +267,9 @@ public class XPathParser {
       factory.setCoalescing(false);
       factory.setExpandEntityReferences(true);
 
+      //创建 DocumentBuilder 对象并进行配置
       DocumentBuilder builder = factory.newDocumentBuilder();
+      //设置 entityResolver 接口对象
       builder.setEntityResolver(entityResolver);
       builder.setErrorHandler(new ErrorHandler() {
         @Override
@@ -258,6 +287,7 @@ public class XPathParser {
           // NOP
         }
       });
+      //加载 xml 文件
       return builder.parse(inputSource);
     } catch (Exception e) {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);

@@ -32,12 +32,12 @@ import org.w3c.dom.NodeList;
  */
 public class XNode {
 
-  private final Node node;
-  private final String name;
-  private final String body;
-  private final Properties attributes;
-  private final Properties variables;
-  private final XPathParser xpathParser;
+  private final Node node;  //org.w3c.dom.Node对象
+  private final String name;  //Node节点名称
+  private final String body;  //节点内容
+  private final Properties attributes;  //节点属性集合
+  private final Properties variables; //mybatis-config.xml配置文件中<properties>节点下定义的键值对
+  private final XPathParser xpathParser;  //xpathParser对象 xNode由XPathParser对象生成
 
   public XNode(XPathParser xpathParser, Node node, Properties variables) {
     this.xpathParser = xpathParser;
